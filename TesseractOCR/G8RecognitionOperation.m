@@ -28,8 +28,6 @@
         _tesseract.delegate = self;
 
         __weak __typeof(self) weakSelf = self;
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
         self.completionBlock = ^{
             __strong __typeof(weakSelf) strongSelf = weakSelf;
 
@@ -41,7 +39,6 @@
                 }];
             }
         };
-#pragma clang diagnostic pop
     }
     return self;
 }
@@ -76,6 +73,14 @@
         canceled = [self.delegate shouldCancelImageRecognitionForTesseract:tesseract];
     }
     return canceled;
+}
+
+- (UIImage *)preprocessedImageForTesseract:(G8Tesseract *)tesseract sourceImage:(UIImage *)sourceImage
+{
+    if ([self.delegate respondsToSelector:@selector(preprocessedImageForTesseract:sourceImage:)]) {
+        return [self.delegate preprocessedImageForTesseract:tesseract sourceImage:sourceImage];
+    }
+    return nil;
 }
 
 @end
